@@ -244,8 +244,8 @@
                     return;
                 }
                 tbody.innerHTML = rows.map(r => {
-                    const page = r.Page ? ? r.page ? ? "";
-                    const chg = r.Changes ? ? r.changes ? ? "";
+                    const page = r.Page ?? r.page ?? "";
+                    const chg = r.Changes ?? r.changes ?? "";
                     return `<tr><td>${page}</td><td>${chg}</td></tr>`;
                 }).join("");
             } catch (e) {
