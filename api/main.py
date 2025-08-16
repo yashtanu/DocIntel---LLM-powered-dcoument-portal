@@ -16,6 +16,7 @@ from src.document_ingestion.data_ingestion import (
 from src.document_analyzer.data_analysis import DocumentAnalyzer
 from src.document_compare.document_comparator import DocumentComparatorLLM
 from src.document_chat.retrieval import ConversationalRAG
+from utils.document_ops import FastAPIFileAdapter, read_pdf_via_handler
 
 FAISS_BASE = os.getenv("FAISS_BASE", "faiss_index")
 UPLOAD_BASE = os.getenv("UPLOAD_BASE", "data")
@@ -51,7 +52,7 @@ async def analyze_document(file: UploadFile = File(...)) -> Any:
     try:
         dh = DocHandler()
         saved_path = dh.save_pdf(FastAPIFileAdapter(file))
-        text = _read_pdf_via_handler(dh, saved_path)
+        text = read_pdf_via_handler(dh, saved_path)
         analyzer = DocumentAnalyzer()
         result = analyzer.analyze_document(text)
         return JSONResponse(content=result)
