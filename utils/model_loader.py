@@ -47,7 +47,7 @@ class ModelLoader:
         llm_block = self.config["llm"]
         log.info("Loading LLM configuration.")
         
-        provider_key = os.getenv("LLM_PROVIDER", "groq")
+        provider_key = os.getenv("LLM_PROVIDER", "google")
 
         if provider_key not in llm_block:
             log.error(f"LLM provider '{provider_key}' not found in configuration.", provider=provider_key)
@@ -58,9 +58,13 @@ class ModelLoader:
         model_name = llm_config.get("model_name")
         temperature = llm_config.get("temperature",0.2)
         max_tokens = llm_config.get("max_tokens",2048)
-
+        MAX_TOKEN_LIMIT = 6000
+        if max_tokens > MAX_TOKEN_LIMIT:
+            log.warning(f"max_tokens {max_tokens} exceeds limit for model; capping to {MAX_TOKEN_LIMIT}", 
+                extra={"requested": max_tokens, "capped": MAX_TOKEN_LIMIT})
+            max_tokens = MAX_TOKEN_LIMIT        
         log.info("LLM configuration loaded.", provider=provider, model_name=model_name,temperature=temperature, max_tokens=max_tokens)
-
+        
         if provider == "google":
             return ChatGoogleGenerativeAI(
                 model=model_name,
@@ -78,7 +82,6 @@ class ModelLoader:
         else:
             log.error(f"Unsupported LLM provider: {provider}", provider=provider)
             raise DocumentPortalException(f"Unsupported LLM provider: {provider}", sys)     
-
 
 if __name__ == "__main__":
     loader = ModelLoader()
