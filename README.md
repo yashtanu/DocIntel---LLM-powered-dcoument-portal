@@ -1,3 +1,7 @@
+DocVision AI
+Description:
+An intelligent document management and analysis portal that applies LLMs for deep understanding, contextual retrieval, and automated knowledge discovery.
+
 ### minimum requirment for for this project
 
 
